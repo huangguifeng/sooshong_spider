@@ -1,17 +1,18 @@
 # -*- coding: utf-8 -*-
 import scrapy
 from scrapy.linkextractors import LinkExtractor
-from scrapy.spiders import CrawlSpider, Rule
+from scrapy.spiders import Rule
 from sh_spider.items import ShSpiderItem
-
+from scrapy_redis.spiders import RedisCrawlSpider
 import sys
 reload(sys)
 sys.setdefaultencoding('utf-8')
 
-class SooshongSpider(CrawlSpider):
+class SooshongSpider(RedisCrawlSpider):
     name = 'sooshong'
     allowed_domains = ['sooshong.com']
-    start_urls = ['http://www.sooshong.com/']
+    # start_urls = ['http://www.sooshong.com/']
+    redis_key = 'sooshang:start_url'
 
     rules = (
         Rule(LinkExtractor(allow=r'company/$'), callback='parse_title',follow=True),

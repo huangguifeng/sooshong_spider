@@ -27,7 +27,7 @@ CONCURRENT_REQUESTS = 64
 # Configure a delay for requests for the same website (default: 0)
 # See http://scrapy.readthedocs.org/en/latest/topics/settings.html#download-delay
 # See also autothrottle settings and docs
-#DOWNLOAD_DELAY = 3
+DOWNLOAD_DELAY = 1
 # The download delay setting will honor only one of:
 #CONCURRENT_REQUESTS_PER_DOMAIN = 16
 #CONCURRENT_REQUESTS_PER_IP = 16
@@ -55,7 +55,7 @@ COOKIES_ENABLED = False
 DOWNLOADER_MIDDLEWARES = {
    'sh_spider.middlewares.RandomUserAgentMiddleware': 543,
    # 'sh_spider.middlewares.ProxyMiddleware': 443,
-   'sh_spider.middlewares.CodeMiddleware': 600,
+   # 'sh_spider.middlewares.CodeMiddleware': 600,
 }
 
 # Enable or disable extensions
@@ -67,7 +67,8 @@ DOWNLOADER_MIDDLEWARES = {
 # Configure item pipelines
 # See http://scrapy.readthedocs.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
-   'sh_spider.pipelines.ShSpiderPipeline': 300,
+   # 'sh_spider.pipelines.ShSpiderPipeline': 300,
+    'scrapy_redis.pipelines.RedisPipeline': 100
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)
@@ -106,3 +107,15 @@ USER_AGENTS = [
    	"Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36 QIHU 360SE",
    	"Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko"
     ]
+# 1(必须). 使用了scrapy_redis的去重组件，在redis数据库里做去重
+DUPEFILTER_CLASS = "scrapy_redis.dupefilter.RFPDupeFilter"
+
+# 2(必须). 使用了scrapy_redis的调度器，在redis里分配请求
+SCHEDULER = "scrapy_redis.scheduler.Scheduler"
+
+# 3(必须). 在redis中保持scrapy-redis用到的各个队列，从而允许暂停和暂停后恢复，也就是不清理redis queues
+SCHEDULER_PERSIST = True
+
+# 5(必须). 指定redis数据库的连接参数
+REDIS_HOST = '192.168.1.3'
+REDIS_PORT = 6379

@@ -37,5 +37,4 @@ class ShSpiderPipeline(object):
         cs.close()
         conn.commit()
         conn.close()
-
         return item
